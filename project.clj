@@ -6,7 +6,8 @@
                   :exclusions [org.clojure/tools.reader]]]
 
   :plugins [[lein-figwheel "0.5.8"]
-            [lein-cljsbuild "1.1.4" :exclusions [[org.clojure/clojure]]]]
+            [lein-cljsbuild "1.1.4" :exclusions [[org.clojure/clojure]]]
+            [lein-garden "0.3.0"]]
 
   :source-paths ["src"]
 
@@ -31,6 +32,18 @@
 
   :figwheel {:css-dirs ["resources/public/css"] ;; watch and update CSS
              }
+
+  :garden {:builds [{;; Optional name of the build:
+                     :id "screen"
+                     ;; Source paths where the stylesheet source code is
+                     :source-paths ["styles"]
+                     ;; The var containing your stylesheet:
+                     :stylesheet nonogram.styles/screen
+                     ;; Compiler flags passed to `garden.core/css`:
+                     :compiler {;; Where to save the file:
+                                :output-to "resources/public/css/style.css"
+                                ;; Compress the output?
+                                :pretty-print? false}}]}
 
   :profiles {:dev {:dependencies [[binaryage/devtools "0.8.2"]
                                   [figwheel-sidecar "0.5.8"]
