@@ -1,5 +1,6 @@
 (ns nonogram.ui
   (:require [rum.core :as rum]
+            [nonogram.game :as game]
             [nonogram.tools :as t]))
 
 (defonce STATE
@@ -29,13 +30,15 @@
   (hints [:.col-hints] state max))
 
 (rum/defc cell
-  [state]
-  [:.cell {:class (name state)}])
+  [state row-index cell-index]
+  [:.cell {:class (name state)
+           :on-click (fn [e]
+                       (swap! STATE game/toggle row-index cell-index))}])
 
 (rum/defc row
-  [state]
-  [:.row (for [c state]
-              (cell c))])
+  [state row-index]
+  [:.row (for [[ci c] (map vector (range) state)]
+           (cell c row-index ci))])
 
 (rum/defc game
   []
@@ -49,7 +52,7 @@
       (for [ch col-hints]
         (col-hint ch max-col-hints))]
      [:.rows
-      (for [[rh r] (map vector row-hints rows)]
+      (for [[rh r ri] (map vector row-hints rows (range))]
         [:div
          (row-hint rh max-row-hints)
-         (row r)])]]))
+         (row r ri)])]]))
