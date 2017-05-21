@@ -1,6 +1,7 @@
 (ns nonogram.game
   (:require [nonogram.tools :refer [split-by]]
-            [clojure.spec :as spec]))
+            [clojure.spec :as spec]
+            [clojure.spec.gen :as sgen]))
 
 (def ^:const max-board-width 50)
 (def ^:const max-board-height max-board-width)
@@ -11,24 +12,24 @@
 (spec/def :board-setup/height 
   (spec/and (spec/int-in 1 max-board-height)))
 
-(spec/def :board-setup/propability 
-  (spec/and number? #(<= 0 % 1))) ; FIXME: use double-in
+(spec/def :board-setup/probability 
+  (spec/and number? #(< 0 % 1))) ; FIXME: use double-in
 
 (spec/def :board-setup/common 
-  (spec/keys :req [:board-setup/width :board-setup/height :board-setup/propability]))
+  (spec/keys :req [:board-setup/width :board-setup/height :board-setup/probability]))
 
-(defn new-board-setup 
+(defn new-board-setup
   [width height probability]
   #:board-setup{:width width
                 :height height
                 :probability probability})
 
-(defn rand-bool 
+(defn rand-bool
   [probability]
   (< probability (rand)))
 
 (spec/fdef rand-bool
-        :args :board-setup/propability
+        :args (spec/cat :probability :board-setup/probability)
         :ret boolean?)
 
 (spec/def :board-row/cell 
@@ -37,8 +38,19 @@
 (spec/def :board/row 
   (spec/coll-of :board-row/cell :min-count 1 :max-count max-board-width))
 
-(spec/def :board/rows 
-  (spec/coll-of :board/row :min-count 1 :max-count max-board-height))
+(def row-gen
+  (sgen/bind
+   (spec/gen (spec/tuple :board-setup/height :board-setup/width))
+   (fn [[width height]]
+     (spec/gen (spec/coll-of
+                (spec/coll-of :board-row/cell :count width)
+                :count height)))))
+
+(spec/def :board/rows
+  (spec/with-gen
+    (spec/and (spec/coll-of :board/row :min-count 1 :max-count max-board-height)
+              #(apply = (map count %)))
+    (fn [] row-gen)))
 
 (defn size 
   [{:board-setup/keys [width height] :as board}]
@@ -52,16 +64,17 @@
                #(rand-bool probability))))
 
 (spec/fdef roll-rows
-           :args :board-setup/common
+           :args (spec/cat :board-setup :board-setup/common)
            :ret :board/rows)
 
 (defn rows-to-cols 
   [rows]
-  (apply map vector rows))
+  (apply mapv vector rows))
 
 (spec/fdef rows-to-cols
-           :args :board/rows
-           :ret :board/rows)
+           :args (spec/cat :rows :board/rows)
+           :ret :board/rows
+           :fn #(= (rows-to-cols (:ret %)) (-> % :args :rows)))
 
 (spec/def :board/hint 
   pos-int?)
@@ -82,11 +95,11 @@
   [row]
   (into []
         (comp (split-by false?)
-              (map count))
+              (map (comp inc count)))
         row))
 
 (spec/fdef row-hints
-           :args :board/row
+           :args (spec/cat :row :board/row)
            :ret :board/hints-coll)
 
 (defn hints
@@ -94,7 +107,7 @@
   (mapv row-hints grid))
 
 (spec/fdef hints
-           :args :board/rows
+           :args (spec/cat :rows :board/rows)
            :ret :board/hints)
 
 (spec/def :board/common
@@ -111,7 +124,7 @@
            :board/col-hints col-hints)))
 
 (spec/fdef new-board
-           :args :board-setup/common
+           :args (spec/cat :board-setup :board-setup/common)
            :ret :board/common)
 
 (def cell-states
@@ -137,6 +150,10 @@
   (assoc board
          :game-board/rows (into [] (repeat height
                                            (into [] (repeat width :none))))))
+
+(spec/fdef new-game-board
+           :args (spec/cat :board-setup :board-setup/common)
+           :ret :game-board/common)
 
 (spec/def :game/common
   (spec/keys :req [:board/common :game-board/common]))
