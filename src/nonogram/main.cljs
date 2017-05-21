@@ -5,9 +5,12 @@
 
 (enable-console-print!)
 
-(rum/mount
- (ui/game
-  (-> (game/new-board-setup (+ 3 (rand-int 17)) (+ 3 (rand-int 17)) (rand))
-      game/new-board
-      game/new-game-board))
- (js/document.getElementById "nonogram"))
+(defn mount
+  [board]
+  (rum/mount
+   (ui/game)
+   (js/document.getElementById "nonogram")))
+
+(add-watch ui/STATE :mount (fn [_ _ _ board] (mount board)))
+
+(mount @ui/STATE)

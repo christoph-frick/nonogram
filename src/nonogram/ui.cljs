@@ -2,6 +2,12 @@
   (:require [rum.core :as rum]
             [nonogram.tools :as t]))
 
+(defonce STATE
+  (atom
+   (-> (game/new-board-setup (+ 3 (rand-int 17)) (+ 3 (rand-int 17)) (rand))
+       game/new-board
+       game/new-game-board)))
+
 (rum/defc hint
   [nr]
   [:.hint nr])
@@ -32,8 +38,9 @@
               (cell c))])
 
 (rum/defc game
-  [{:board/keys [col-hints row-hints] :game-board/keys [rows] :as board}]
-  (let [max-col-hints (t/max-count col-hints)
+  []
+  (let [{:board/keys [col-hints row-hints] :game-board/keys [rows] :as game} @STATE
+        max-col-hints (t/max-count col-hints)
         max-row-hints (t/max-count row-hints)]
     [:.game
      [:.col-hint-container
