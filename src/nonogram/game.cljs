@@ -140,3 +140,7 @@
 
 (spec/def :game/common
   (spec/keys :req [:board/common :game-board/common]))
+
+(defn toggle
+  [board row-index col-index]
+  (update-in board [:game-board/rows row-index col-index] next-cell))
