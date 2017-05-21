@@ -114,8 +114,14 @@
            :args :board-setup/common
            :ret :board/common)
 
+(def cell-states
+  [:none :yes :no])
+
 (spec/def :game-board/cell
-  #{:none :yes :no :maybe})
+  (into #{} cell-states))
+
+(def next-cell
+  (into {} (map vector cell-states (rest (cycle cell-states)))))
 
 (spec/def :game-board/row
   (spec/coll-of :game-board/cell :min-count 1 :max-count max-board-width))

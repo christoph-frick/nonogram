@@ -38,8 +38,7 @@
                  :border-right grid-line}]
         [:.cell.none {:background-color :inherit}]
         [:.cell.yes {:background-color "green"}]
-        [:.cell.no {:background-color "red"}]
-        [:.cell.maybe {:background-color "yellow"}]]]]]))
+        [:.cell.no {:background-color "red"}]]]]]))
 
 ;; div.hint {
 ;; 	width: 2em;
