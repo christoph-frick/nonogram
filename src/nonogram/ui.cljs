@@ -49,17 +49,20 @@
 
 (rum/defc game
   []
-  (let [{:board/keys [col-hints row-hints] :game-board/keys [rows] :as game} @STATE
+  (let [{:board/keys [col-hints row-hints] :game-board/keys [rows] :as board} @STATE
         max-col-hints (t/max-count col-hints)
         max-row-hints (t/max-count row-hints)]
-    [:.game
-     [:.col-hint-container
-      (for [_ (range max-row-hints)]
-        (row-hint [] max-col-hints))
-      (for [ch col-hints]
-        (col-hint ch max-col-hints))]
-     [:.rows
-      (for [[rh r ri] (map vector row-hints rows (range))]
-        [:div
-         (row-hint rh max-row-hints)
-         (row r ri)])]]))
+    [:div
+     (when (game/won? board)
+       [:h1 "You won!"])
+     [:.game
+      [:.col-hint-container
+       (for [_ (range max-row-hints)]
+         (row-hint [] max-col-hints))
+       (for [ch col-hints]
+         (col-hint ch max-col-hints))]
+      [:.rows
+       (for [[rh r ri] (map vector row-hints rows (range))]
+         [:div
+          (row-hint rh max-row-hints)
+          (row r ri)])]]]))

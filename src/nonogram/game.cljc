@@ -2,7 +2,8 @@
   (:require [nonogram.tools :refer [split-by]]
             [clojure.test.check.generators]
             [clojure.spec.alpha :as spec]
-            [clojure.spec.gen.alpha :as sgen]))
+            [clojure.spec.gen.alpha :as sgen]
+            [com.rpl.specter :refer [transform ALL] :as specter]))
 
 (def ^:const max-board-width 50)
 (def ^:const max-board-height max-board-width)
@@ -165,6 +166,12 @@
 (spec/def :game/common
   (spec/keys :req [:board/common :game-board/common]))
 
+; FIXME just for testing
 (defn toggle
   [board row-index col-index]
   (update-in board [:game-board/rows row-index col-index] next-cell))
+
+(defn won?
+  [{game-rows :game-board/rows board-rows :board/rows :as board}]
+  (= board-rows
+     (transform [ALL ALL] (comp boolean #{:yes}) game-rows)))
