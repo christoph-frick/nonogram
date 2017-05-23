@@ -26,7 +26,7 @@
 
 (defn rand-bool
   [probability]
-  (< probability (rand)))
+  (< (rand) probability))
 
 (spec/fdef rand-bool
         :args (spec/cat :probability :board-setup/probability)
