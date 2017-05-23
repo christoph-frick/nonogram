@@ -3,6 +3,7 @@
   :dependencies [[org.clojure/clojure "1.9.0-alpha16"]
                  [org.clojure/clojurescript "1.9.542"]
                  [rum "0.10.8"]
+                 [rum-mdl "0.2.0"]
                  [com.rpl/specter "1.0.1"]
                  [org.clojure/test.check "0.9.0"]]
 
