@@ -5,9 +5,10 @@
 
 (defonce STATE
   (atom
-   (-> (game/new-board-setup (+ 3 (rand-int 17)) (+ 3 (rand-int 17)) (rand))
-       game/new-board
-       game/new-game-board)))
+   (-> (game/new-board-setup 5 5 0.5)
+       #_(game/new-board-setup (+ 3 (rand-int 17)) (+ 3 (rand-int 17)) (rand))
+       (game/new-board)
+       (game/new-game-board))))
 
 (rum/defc hint
   [nr]
