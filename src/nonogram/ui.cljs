@@ -1,5 +1,6 @@
 (ns nonogram.ui
   (:require [rum.core :as rum]
+            [clojure.string :as str]
             [nonogram.game :as game]
             [nonogram.tools :as t]))
 
@@ -9,6 +10,9 @@
        #_(game/new-board-setup (+ 3 (rand-int 17)) (+ 3 (rand-int 17)) (rand))
        (game/new-board)
        (game/new-game-board))))
+
+(defn simple-key [args]
+  (str/join "-" (map str args)))
 
 (rum/defc hint
   [nr]
@@ -32,14 +36,16 @@
 
 (rum/defc cell
   [state row-index cell-index]
-  [:.cell {:class (name state)
+  [:.cell {:key (simple-key [:cell row-index cell-index])
+           :class (name state)
            :on-click (fn [e]
                        (swap! STATE game/toggle row-index cell-index))}])
 
 (rum/defc row
   [state row-index]
-  [:.row (for [[ci c] (map vector (range) state)]
-           (cell c row-index ci))])
+  [:.row {:key (simple-key [:row row-index])}
+   (for [[ci c] (map vector (range) state)]
+     (cell c row-index ci))])
 
 (rum/defc game
   []
