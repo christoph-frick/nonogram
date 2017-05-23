@@ -1,10 +1,11 @@
 (ns nonogram.tools)
 
 (defn split-by
-  ([f]
-   (comp (partition-by f) (take-nth 2)))
-  ([f coll]
-   (sequence (split-by f) coll)))
+  ([pred]
+   (comp (partition-by pred)
+         (remove (comp pred first))))
+  ([pred coll]
+   (sequence (split-by pred) coll)))
 
 (defn max-count
   [xs]
