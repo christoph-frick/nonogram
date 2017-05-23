@@ -1,5 +1,6 @@
 (ns nonogram.game
   (:require [nonogram.tools :refer [split-by]]
+            [clojure.test.check.generators]
             [clojure.spec.alpha :as spec]
             [clojure.spec.gen.alpha :as sgen]))
 
