@@ -98,7 +98,7 @@
   [row]
   (into []
         (comp (split-by false?)
-              (map (comp inc count)))
+              (map count))
         row))
 
 (spec/fdef row-hints
