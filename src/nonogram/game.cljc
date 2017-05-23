@@ -1,7 +1,7 @@
 (ns nonogram.game
   (:require [nonogram.tools :refer [split-by]]
-            [clojure.spec :as spec]
-            [clojure.spec.gen :as sgen]))
+            [clojure.spec.alpha :as spec]
+            [clojure.spec.gen.alpha :as sgen]))
 
 (def ^:const max-board-width 50)
 (def ^:const max-board-height max-board-width)
@@ -13,7 +13,7 @@
   (spec/and (spec/int-in 1 max-board-height)))
 
 (spec/def :board-setup/probability 
-  (spec/and number? #(< 0 % 1))) ; FIXME: use double-in
+  (spec/and (spec/double-in :min 0 :max 1 :infinite? false :NaN false)))
 
 (spec/def :board-setup/common 
   (spec/keys :req [:board-setup/width :board-setup/height :board-setup/probability]))

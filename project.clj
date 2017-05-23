@@ -1,10 +1,9 @@
 (defproject nonogram "0.1.0-SNAPSHOT"
   :min-lein-version "2.7.1"
-  :dependencies [[org.clojure/clojure "1.9.0-alpha14"]
-                 [org.clojure/clojurescript "1.9.229"]
-                 [org.clojure/core.async "0.2.395"
-                  :exclusions [org.clojure/tools.reader]]
-                 [rum "0.10.7"]]
+  :dependencies [[org.clojure/clojure "1.9.0-alpha16"]
+                 [org.clojure/clojurescript "1.9.542"]
+                 [rum "0.10.8"]
+                 [org.clojure/test.check "0.9.0"]]
 
   :plugins [[lein-figwheel "0.5.8"]
             [lein-cljsbuild "1.1.4" :exclusions [[org.clojure/clojure]]]
@@ -46,8 +45,8 @@
                                 ;; Compress the output?
                                 :pretty-print? false}}]}
 
-  :profiles {:dev {:dependencies [[binaryage/devtools "0.8.2"]
-                                  [figwheel-sidecar "0.5.8"]
+  :profiles {:dev {:dependencies [[binaryage/devtools "0.9.4"]
+                                  [figwheel-sidecar "0.5.10"]
                                   [com.cemerick/piggieback "0.2.1"]
                                   [org.clojure/test.check "0.9.0"]]
                    :source-paths ["src" "dev"]
