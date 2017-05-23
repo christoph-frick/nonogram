@@ -65,7 +65,10 @@
 
 (spec/fdef roll-rows
            :args (spec/cat :board-setup :board-setup/common)
-           :ret :board/rows)
+           :ret :board/rows
+           :fn (fn [{{{:board-setup/keys [width height]} :board-setup} :args, rows :ret}]
+                 (and (= height (count rows))
+                      (every? (partial = width) (map count rows)))))
 
 (defn rows-to-cols 
   [rows]
@@ -100,7 +103,10 @@
 
 (spec/fdef row-hints
            :args (spec/cat :row :board/row)
-           :ret :board/hints-coll)
+           :ret :board/hints-coll
+           :fn (fn [{{row :row} :args, hints :ret}]
+                 (= (apply + hints)
+                    (count (remove false? row)))))
 
 (defn hints
   [grid]
