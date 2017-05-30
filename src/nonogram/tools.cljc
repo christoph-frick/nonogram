@@ -2,8 +2,8 @@
 
 (defn split-by
   ([pred]
-   (comp (partition-by pred)
-         (drop-while (comp pred first))
+   (comp (drop-while pred)
+         (partition-by pred)
          (take-nth 2)))
   ([pred coll]
    (sequence (split-by pred) coll)))
