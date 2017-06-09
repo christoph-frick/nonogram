@@ -5,21 +5,27 @@
             [nonogram.game :as game]
             [nonogram.tools :as t]))
 
+(defn new-game
+  [setup]
+  (-> setup
+      #_(game/new-board-setup (+ 3 (rand-int 17)) (+ 3 (rand-int 17)) (rand))
+      (game/new-board)
+      (game/new-game-board)))
+
 ; TODO move all the defn over to game ns
 (defonce STATE
-  (atom
-   (-> (game/new-board-setup 5 5 0.5)
-       #_(game/new-board-setup (+ 3 (rand-int 17)) (+ 3 (rand-int 17)) (rand))
-       (game/new-board)
-       (game/new-game-board))))
+  (let [setup (game/new-board-setup 5 5 0.5)]
+    (atom {:setup setup
+           :game (new-game setup)})))
 
 (defn new-game!
   []
-  (swap! STATE (comp game/new-game-board game/new-board)))
+  (swap! STATE (fn [{:keys [setup] :as state}]
+                 (assoc state :game (new-game setup)))))
 
 (defn restart-game!
   []
-  (swap! STATE game/new-game-board))
+  (swap! STATE update :game game/new-game-board))
 
 (defn value
   [e]
@@ -27,7 +33,7 @@
 
 (defn update-setup!
   [key value]
-  (swap! STATE assoc key value))
+  (swap! STATE update :setup assoc key value))
 
 (defn simple-key [args]
   (str/join "-" (map str args)))
@@ -57,7 +63,7 @@
   [:.cell {:key (simple-key [:cell row-index cell-index])
            :class (name state)
            :on-click (fn [e]
-                       (swap! STATE game/toggle row-index cell-index))}])
+                       (swap! STATE update :game game/toggle row-index cell-index))}])
 
 (rum/defc row
   [state row-index]
@@ -86,7 +92,7 @@
 
 (rum/defc game
   []
-  (let [{:board-setup/keys [width height probability] :as state} @STATE]
+  (let [{{:board-setup/keys [width height probability]} :setup, state :game} @STATE]
     (mdl/layout
      (mdl/header
       (mdl/header-row
