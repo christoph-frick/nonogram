@@ -15,12 +15,10 @@
 
 (defn new-game!
   []
-  (println "QWER")
   (swap! STATE (comp game/new-game-board game/new-board)))
 
 (defn restart-game!
   []
-  (println "ASDF")
   (swap! STATE game/new-game-board))
 
 (defn value
