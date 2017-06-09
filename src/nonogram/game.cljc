@@ -5,7 +5,7 @@
             [clojure.spec.gen.alpha :as sgen]
             [com.rpl.specter :refer [transform ALL] :as specter]))
 
-(def ^:const max-board-width 50)
+(def ^:const max-board-width 30)
 (def ^:const max-board-height max-board-width)
 
 (spec/def :board-setup/width 
