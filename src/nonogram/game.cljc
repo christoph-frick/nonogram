@@ -138,11 +138,12 @@
 (def cell-states
   [:none :yes :no])
 
+(def next-cell-state
+  (let [gen-toggle (fn [m s] (assoc m s {:none s s :none}))]
+    (reduce gen-toggle {} [:yes :no])))
+
 (spec/def :game-board/cell
   (into #{} cell-states))
-
-(def next-cell
-  (into {} (map vector cell-states (rest (cycle cell-states)))))
 
 (spec/def :game-board/row
   (spec/coll-of :game-board/cell :min-count 1 :max-count max-board-width))
@@ -166,10 +167,9 @@
 (spec/def :game/common
   (spec/keys :req [:board/common :game-board/common]))
 
-; FIXME just for testing
 (defn toggle
-  [board row-index col-index]
-  (update-in board [:game-board/rows row-index col-index] next-cell))
+  [board row-index col-index cell-state]
+  (update-in board [:game-board/rows row-index col-index] (next-cell-state cell-state)))
 
 (defn won?
   [{game-rows :game-board/rows board-rows :board/rows :as board}]

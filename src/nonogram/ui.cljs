@@ -62,8 +62,11 @@
   [state row-index cell-index]
   [:.cell {:key (simple-key [:cell row-index cell-index])
            :class (name state)
-           :on-click (fn [e]
-                       (swap! STATE update :game game/toggle row-index cell-index))}])
+           :on-mouse-up (fn [e]
+                          (let [mapping {0 :yes 2 :no}
+                                button (-> e .-button)]
+                            (when-let [cell-state (mapping button)]
+                              (swap! STATE update :game game/toggle row-index cell-index cell-state))))}])
 
 (rum/defc row
   [state row-index]
