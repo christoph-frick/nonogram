@@ -103,7 +103,9 @@
      (mdl/main-content
       (mdl/grid
        (mdl/cell {:mdl [:8]}
-                 (board state))
+                 (mdl/grid
+                  (mdl/cell {:mdl [:12]}
+                            (board state))))
        (mdl/cell {:mdl [:4]}
                  (mdl/card {:mdl [:shadow--2dp]}
                            (mdl/card-title "Setup")
