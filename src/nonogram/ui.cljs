@@ -93,6 +93,15 @@
           (row-hint rh max-row-hints)
           (row r ri)])]]]))
 
+(rum/defc manual
+  []
+  (mdl/card
+   {:mdl [:shadow--2dp]}
+   (mdl/card-title "How to play")
+   (mdl/card-text
+    [:span "See " [:a {:target "_blank" :href "https://en.wikipedia.org/wiki/Nonogram"} "Wikipedia"] " for instructions."
+     "Uee " [:i "left mouse button"] " to mark blocks and " [:i "right mouse button"] " to mark locations without a block"])))
+
 (rum/defc game
   []
   (let [{{:board-setup/keys [width height probability]} :setup, state :game} @STATE]
@@ -107,6 +116,8 @@
                   (mdl/cell {:mdl [:12]}
                             (board state))))
        (mdl/cell {:mdl [:4]}
+                 (manual)
+                 [:p]
                  (mdl/card {:mdl [:shadow--2dp]}
                            (mdl/card-title "Setup")
                            (mdl/card-action
