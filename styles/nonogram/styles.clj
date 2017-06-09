@@ -1,10 +1,12 @@
 (ns nonogram.styles
   (:require [garden.def :refer [defstylesheet defstyles]]
+            [garden.selectors :refer [selector div last-child nth-child]]
             [garden.units :refer [px em]]))
 
 (defstyles screen
   (let [cell-size (em 2)
-        grid-line [[(px 1) :solid "#333"]]]
+        grid-line [[(px 1) :solid "#ddd"]]
+        grid-line-seperator [[(px 1) :solid "#999"]]]
     [:div
      [:.hint :.cell {:width cell-size
                      :height cell-size
@@ -33,7 +35,14 @@
                 :border-right grid-line}]
        [:.cell.none {:background-color :inherit}]
        [:.cell.yes {:background-color "rgb(128,255,128)"}]
-       [:.cell.no {:background-color "rgb(255,128,128)"}]]]]))
+       [:.cell.no {:background-color "rgb(255,128,128)"}]]
+      ; thicker line every fifth row/col
+      [(div (nth-child 5))
+       [:.row [:.cell
+               {:border-bottom grid-line-seperator}]]]
+      [:.row
+       [(div ".cell" (nth-child 5))
+        {:border-right grid-line-seperator}]]]]))
 
 ;; div.hint {
 ;; 	width: 2em;
