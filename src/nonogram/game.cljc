@@ -138,9 +138,10 @@
 (def cell-states
   [:none :yes :no])
 
-(def next-cell-state
-  (let [gen-toggle (fn [m s] (assoc m s {:none s s :none}))]
-    (reduce gen-toggle {} [:yes :no])))
+(defn next-cell-state [current target]
+  (if (not= current target)
+      target
+      :none))
 
 (spec/def :game-board/cell
   (into #{} cell-states))
@@ -169,7 +170,7 @@
 
 (defn toggle
   [board row-index col-index cell-state]
-  (update-in board [:game-board/rows row-index col-index] (next-cell-state cell-state)))
+  (update-in board [:game-board/rows row-index col-index] next-cell-state cell-state))
 
 (defn won?
   [{game-rows :game-board/rows board-rows :board/rows :as board}]
