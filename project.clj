@@ -1,10 +1,10 @@
 (defproject nonogram "0.1.0-SNAPSHOT"
   :min-lein-version "2.7.1"
-  :dependencies [[org.clojure/clojure "1.9.0-alpha16"]
-                 [org.clojure/clojurescript "1.9.542"]
+  :dependencies [[org.clojure/clojure "1.9.0-alpha17"]
+                 [org.clojure/clojurescript "1.9.671"]
                  [rum "0.10.8"]
-                 [rum-mdl "0.2.0"]
-                 [com.rpl/specter "1.0.1"]
+                 [rum-mdl "0.2.1"]
+                 [com.rpl/specter "1.0.2"]
                  [org.clojure/test.check "0.9.0"]]
 
   :plugins [[lein-figwheel "0.5.8"]
@@ -48,8 +48,8 @@
                                 :pretty-print? false}}]}
 
   :profiles {:dev {:dependencies [[binaryage/devtools "0.9.4"]
-                                  [figwheel-sidecar "0.5.10"]
-                                  [com.cemerick/piggieback "0.2.1"]
+                                  [figwheel-sidecar "0.5.11"]
+                                  [com.cemerick/piggieback "0.2.2"]
                                   [org.clojure/test.check "0.9.0"]]
                    :source-paths ["src" "dev"]
                    :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}  
