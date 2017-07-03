@@ -1,6 +1,7 @@
 (ns nonogram.game-test
   (:require [clojure.spec.test.alpha :as stest]
-            [clojure.test :refer [deftest is]]))
+            [clojure.test :refer [deftest is]]
+            [nonogram.game]))
 
 (deftest generative
   (is
